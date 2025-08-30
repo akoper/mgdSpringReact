@@ -1,35 +1,36 @@
 package com.example.mgdSpringReact.model;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "task")
+@Getter
+@Setter
 public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(nullable = false, length = 255)
+    @Column(name = "title", nullable = false, length = 255)
     private String title;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "status", nullable = false)
     private Status status = Status.PENDING;
 
+    @Column(name = "due_date")
     private OffsetDateTime dueDate;
 
-    @Column(nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
 
-    @Column(nullable = false)
+    @Column(name = "updated_at", nullable = false)
     private OffsetDateTime updatedAt;
 
     public enum Status { PENDING, IN_PROGRESS, COMPLETED, CANCELLED }
@@ -46,5 +47,4 @@ public class Task {
         this.updatedAt = OffsetDateTime.now();
     }
 
-// getters/setters omitted for brevity
 }
