@@ -122,6 +122,76 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<!-- Build the React app -->
+			<plugin>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<version>1.15.0</version>
+				<configuration>
+					<workingDirectory>src/main/frontend</workingDirectory>
+				</configuration>
+				<executions>
+					<execution>
+						<id>install-node</id>
+						<goals><goal>install-node-and-npm</goal></goals>
+						<configuration><nodeVersion>v20.15.0</nodeVersion></configuration>
+					</execution>
+					<execution>
+						<id>npm-ci</id>
+						<goals><goal>npm</goal></goals>
+						<configuration><arguments>ci</arguments></configuration>
+					</execution>
+					<!-- Build frontend earlier so static files exist during normal run -->
+					<execution>
+						<id>npm-build-generate</id>
+						<goals><goal>npm</goal></goals>
+						<phase>generate-resources</phase>
+						<configuration><arguments>run build</arguments></configuration>
+					</execution>
+					<execution>
+						<id>npm-build</id>
+						<goals><goal>npm</goal></goals>
+						<phase>prepare-package</phase>
+						<configuration><arguments>run build</arguments></configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Copy React build into Spring Boot static -->
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.3.1</version>
+				<executions>
+						<!-- Copy during normal resource processing for dev runs -->
+						<execution>
+							<id>copy-react-process</id>
+							<phase>process-resources</phase>
+							<goals><goal>copy-resources</goal></goals>
+							<configuration>
+								<outputDirectory>${project.build.outputDirectory}/static</outputDirectory>
+								<resources>
+									<resource>
+										<directory>${project.basedir}/src/main/frontend/dist</directory>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+						<!-- Copy again at prepare-package to ensure final JAR includes latest frontend -->
+						<execution>
+							<id>copy-react</id>
+							<phase>prepare-package</phase>
+							<goals><goal>copy-resources</goal></goals>
+							<configuration>
+								<outputDirectory>${project.build.outputDirectory}/static</outputDirectory>
+								<resources>
+									<resource>
+										<directory>${project.basedir}/src/main/frontend/dist</directory> <!-- Vite default -->
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 

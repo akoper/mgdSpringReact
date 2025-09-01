@@ -56,17 +56,44 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Task> update(@PathVariable Long id, @Valid @RequestBody UpdateTaskRequest request) {
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody String body) {
         return taskRepository.findById(id)
                 .map(task -> {
-                    task.setTitle(request.getTitle());
-                    task.setDescription(request.getDescription());
-                    task.setStatus(request.getStatus());
-                    task.setDueDate(request.getDueDate());
-                    Task saved = taskRepository.save(task);
-                    return ResponseEntity.ok(saved);
+                    try {
+                        String trimmed = body == null ? "" : body.trim();
+                        // If the body looks like a JSON object, treat it as full update
+                        if (trimmed.startsWith("{")) {
+                            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper().findAndRegisterModules();
+                            UpdateTaskRequest request = mapper.readValue(trimmed, UpdateTaskRequest.class);
+                            // Apply full update (fields are optional; only set when non-null)
+                            if (request.getTitle() != null) task.setTitle(request.getTitle());
+                            if (request.getDescription() != null) task.setDescription(request.getDescription());
+                            if (request.getStatus() != null) task.setStatus(request.getStatus());
+                            if (request.getDueDate() != null) task.setDueDate(request.getDueDate());
+                        } else {
+                            // Otherwise, treat it as a JSON string representing the status, possibly quoted
+                            // Remove surrounding quotes if present
+                            if ((trimmed.startsWith("\"") && trimmed.endsWith("\"")) || (trimmed.startsWith("'") && trimmed.endsWith("'"))) {
+                                trimmed = trimmed.substring(1, trimmed.length() - 1);
+                            }
+                            if (trimmed.isEmpty()) {
+                                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+                            }
+                            // Map to enum (case-sensitive to match enum names)
+                            try {
+                                Task.Status newStatus = Task.Status.valueOf(trimmed);
+                                task.setStatus(newStatus);
+                            } catch (IllegalArgumentException ex) {
+                                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+                            }
+                        }
+                        Task saved = taskRepository.save(task);
+                        return ResponseEntity.ok(saved);
+                    } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+                    }
                 })
-                .orElse(ResponseEntity.notFound().build());
+                .orElseGet(() -> ResponseEntity.<Task>status(HttpStatus.NOT_FOUND).build());
     }
 
     @PatchMapping("/{id}/status")
