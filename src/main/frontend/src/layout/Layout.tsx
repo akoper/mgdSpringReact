@@ -1,11 +1,19 @@
-import { useState, type PropsWithChildren } from 'react';
+import { useMemo, useState, type PropsWithChildren } from 'react';
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { getToken, logoutServer } from "../lib/api";
+import { getToken, getUserInfo, logoutServer } from "../lib/api";
 
 export default function Layout({ children }: PropsWithChildren) {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
     const token = getToken();
+    const userInfo = getUserInfo();
+
+    const orgDisplay = useMemo(() => {
+        const orgs = userInfo?.organizations ?? [];
+        if (!orgs.length) return null;
+        if (orgs.length === 1) return orgs[0];
+        return `${orgs[0]} +${orgs.length - 1}`;
+    }, [userInfo]);
 
     async function onLogout() {
         await logoutServer();
@@ -34,9 +42,15 @@ export default function Layout({ children }: PropsWithChildren) {
                     <nav className={"nav-links " + (open ? "open" : "")}
                          onClick={() => setOpen(false)}>
 
-
                         {token ? (
                             <>
+                                <span style={{ alignSelf: 'center', opacity: 0.9 }}>
+                                    {userInfo?.username ? (
+                                        <>
+                                            Logged in as: <strong>{userInfo.username}</strong> at {userInfo.organizations}
+                                        </>
+                                    ) : null}
+                                </span>
                                 <NavLink to="/tasks" end className={({ isActive }) => isActive ? 'active' : ''}>Tasks</NavLink>
                                 <NavLink to="/organizations" end className={({ isActive }) => isActive ? 'active' : ''}>Organizations</NavLink>
                                 <NavLink to="/login" onClick={onLogout} className={({ isActive }) => isActive ? 'active' : ''}>Logout</NavLink>

@@ -4,6 +4,7 @@ import axios from "axios";
 const API_BASE = "/api";
 
 const TOKEN_KEY = "auth_token";
+const USER_INFO_KEY = "auth_user_info";
 
 export function getToken(): string | null {
     return localStorage.getItem(TOKEN_KEY);
@@ -11,7 +12,24 @@ export function getToken(): string | null {
 export function setToken(token: string | null) {
     if (token) localStorage.setItem(TOKEN_KEY, token); else localStorage.removeItem(TOKEN_KEY);
 }
-export function logout() { setToken(null); }
+
+export type AuthUserInfo = {
+    username: string;
+    roles?: string;
+    organizations?: string[];
+}
+
+export function setUserInfo(info: AuthUserInfo | null) {
+    if (info) localStorage.setItem(USER_INFO_KEY, JSON.stringify(info));
+    else localStorage.removeItem(USER_INFO_KEY);
+}
+export function getUserInfo(): AuthUserInfo | null {
+    const raw = localStorage.getItem(USER_INFO_KEY);
+    if (!raw) return null;
+    try { return JSON.parse(raw) as AuthUserInfo; } catch { return null; }
+}
+
+export function logout() { setToken(null); setUserInfo(null); }
 
 export const api = axios.create({
     baseURL: API_BASE,
@@ -67,18 +85,22 @@ export async function deleteTask(id: number) {
     await api.delete(`/tasks/${id}`);
 }
 
+export type AuthResponse = { token: string; username: string; roles: string; organizations?: string[] };
+
 export async function register(username: string, password: string) {
-    const res = await api.post(`/auth/register`, { username, password });
-    const token = res.data?.token as string | undefined;
-    if (token) setToken(token);
-    return res.data;
+    const res = await api.post<AuthResponse>(`/auth/register`, { username, password });
+    const data = res.data;
+    if (data?.token) setToken(data.token);
+    if (data?.username) setUserInfo({ username: data.username, roles: data.roles, organizations: data.organizations ?? [] });
+    return data;
 }
 
 export async function login(username: string, password: string) {
-    const res = await api.post(`/auth/login`, { username, password });
-    const token = res.data?.token as string | undefined;
-    if (token) setToken(token);
-    return res.data;
+    const res = await api.post<AuthResponse>(`/auth/login`, { username, password });
+    const data = res.data;
+    if (data?.token) setToken(data.token);
+    if (data?.username) setUserInfo({ username: data.username, roles: data.roles, organizations: data.organizations ?? [] });
+    return data;
 }
 
 export async function logoutServer() {
@@ -95,8 +117,15 @@ export async function logoutServer() {
 export type Organization = { id: number; name: string; createdAt: string };
 
 export async function createOrganization(name: string): Promise<Organization> {
-    const res = await api.post(`/organizations`, { name });
-    return res.data;
+    const res = await api.post<Organization>(`/organizations`, { name });
+    const org = res.data;
+    // Optimistically update local user info to include the new organization
+    const info = getUserInfo();
+    if (info) {
+        const orgs = Array.from(new Set([...(info.organizations ?? []), org.name]));
+        setUserInfo({ ...info, organizations: orgs });
+    }
+    return org;
 }
 
 export async function joinOrganization(id: number): Promise<{ joined: boolean; organizationId: number }> {

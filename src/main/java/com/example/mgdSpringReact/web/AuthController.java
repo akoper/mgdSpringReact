@@ -15,7 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -51,7 +53,7 @@ public class AuthController {
 
         String token = jwtService.generateToken(saved.getUsername(), Map.of("roles", saved.getRoles()));
         return ResponseEntity.created(URI.create("/api/users/" + saved.getId()))
-                .body(new AuthResponse(token, saved.getUsername(), saved.getRoles()));
+                .body(new AuthResponse(token, saved.getUsername(), saved.getRoles(), List.of()));
     }
 
     @PostMapping("/login")
@@ -62,7 +64,8 @@ public class AuthController {
         String username = auth.getName();
         var ua = users.findByUsername(username).orElseThrow();
         String token = jwtService.generateToken(username, Map.of("roles", ua.getRoles()));
-        return ResponseEntity.ok(new AuthResponse(token, ua.getUsername(), ua.getRoles()));
+        var orgNames = ua.getOrganizations().stream().map(o -> o.getName()).collect(Collectors.toList());
+        return ResponseEntity.ok(new AuthResponse(token, ua.getUsername(), ua.getRoles(), orgNames));
     }
 
     @PostMapping("/logout")
