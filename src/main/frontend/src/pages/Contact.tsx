@@ -19,18 +19,15 @@ export default function Contact() {
             <h1>Contact Us</h1>
 
             <form className="contact-form" onSubmit={onSubmit}>
-                <label>
-                    Name: &nbsp;
-                    <input type="text" placeholder="Name" value={name} onChange={e => setName(e.target.value)} required/>
-                </label>
-                <label>
-                    Email: &nbsp;
-                <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} required/>
-                </label>
-                <label>
-                    Message: &nbsp;
-                    <textarea placeholder="Message" value={message} onChange={e => setMessage(e.target.value)} required/>
-                </label>
+                <label>Name: </label>
+                <input type="text" placeholder="Name" className="width375" value={name} onChange={e => setName(e.target.value)} required/>
+
+                <label>Email: </label>
+                <input type="email" placeholder="Email" className="width375" value={email} onChange={e => setEmail(e.target.value)} required/>
+
+                <label>Message:</label>
+                <textarea placeholder="Message" className="width375" value={message} onChange={e => setMessage(e.target.value)} required/>
+
                 <button className="button" type="submit">Send</button>
                 {status && <p className="form-status" role="status">{status}</p>}
             </form>

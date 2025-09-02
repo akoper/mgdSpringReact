@@ -24,10 +24,12 @@ export default function Register() {
       <h1>Register</h1>
       <form onSubmit={onSubmit}>
         <div>
-          <input value={username} onChange={e => setUsername(e.target.value)} placeholder="Username" required />
+            <label for="username">Username:</label>
+            <input type="text" id="username" value={username} onChange={e => setUsername(e.target.value)} placeholder="Username" required />
         </div>
         <div>
-          <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" required />
+            <label for="password">Password:</label>
+            <input type="password" id="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Password" required />
         </div>
         <button type="submit">Register</button>
         {error && <p role="alert" style={{color:'crimson'}}>{error}</p>}

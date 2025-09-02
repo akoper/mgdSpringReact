@@ -64,4 +64,11 @@ public class AuthController {
         String token = jwtService.generateToken(username, Map.of("roles", ua.getRoles()));
         return ResponseEntity.ok(new AuthResponse(token, ua.getUsername(), ua.getRoles()));
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout() {
+        // With stateless JWT, logout is handled client-side by removing the token.
+        // Endpoint provided for symmetry and potential future server-side invalidation.
+        return ResponseEntity.noContent().build();
+    }
 }

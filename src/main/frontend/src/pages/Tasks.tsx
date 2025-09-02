@@ -46,21 +46,25 @@ function Tasks() {
             <div>
 
             <form onSubmit={onCreate} style={{ marginBottom: 16 }}>
-                <input
-                    type="text"
-                    placeholder="Title"
-                    value={title}
-                    onChange={e => setTitle(e.target.value)}
-                    style={{ padding: 8, width: 240, marginRight: 8 }}
-                />
-                <input
-                    type="text"
-                    placeholder="Description (optional)"
-                    value={description}
-                    onChange={e => setDescription(e.target.value)}
-                    style={{ padding: 8, width: 320, marginRight: 8 }}
-                />
-                <button type="submit">Create</button>
+                <label>
+                <label for="title">Title:</label>
+                    <input
+                        type="text"
+                        id="title"
+                        placeholder="Title"
+                        value={title}
+                        onChange={e => setTitle(e.target.value)}
+                    />
+                </label>
+                <label for="description">Description:</label>
+                    <input
+                        type="text"
+                        id="description"
+                        placeholder="Description (optional)"
+                        value={description}
+                        onChange={e => setDescription(e.target.value)}
+                    />
+                    <button type="submit">Create</button>
             </form>
 
             </div>

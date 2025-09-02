@@ -115,14 +115,20 @@ html, body, #app { height: 100%; }
   .task-form { grid-template-columns: 1fr; }
 }
 
-.task-form input[type="text"],
-.contact-form input[type="text"],
-.contact-form input[type="email"],
-.contact-form textarea {
-  padding: 0.5rem 0.6rem;
-  border-radius: 2px;
+input[type="text"],
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+  padding: .75rem;
+  border-radius: 3px;
   border: 1px solid #444444;
   color: inherit;
+  margin: .5rem;
+}
+
+.width375{
+    max-width: 375px;
 }
 
 .task-list { list-style: none; padding: 0; margin: 0; }

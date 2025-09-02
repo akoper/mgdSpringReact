@@ -80,3 +80,13 @@ export async function login(username: string, password: string) {
     if (token) setToken(token);
     return res.data;
 }
+
+export async function logoutServer() {
+    try {
+        await api.post(`/auth/logout`);
+    } catch (e) {
+        // ignore server errors for logout to ensure client clears token
+    } finally {
+        logout();
+    }
+}
