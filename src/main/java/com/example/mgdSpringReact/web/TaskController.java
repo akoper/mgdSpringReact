@@ -29,22 +29,40 @@ public class TaskController {
     }
 
     @GetMapping
-    public List<Task> list(
+    public ResponseEntity<List<Task>> list(
             @RequestParam(name = "status", required = false) Task.Status status,
-            @RequestParam(name = "dueBefore", required = false) OffsetDateTime dueBefore
+            @RequestParam(name = "dueBefore", required = false) OffsetDateTime dueBefore,
+            Authentication auth
     ) {
+        if (auth == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        String username = auth.getName();
+        UserAccount current = users.findByUsername(username).orElse(null);
+        if (current == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        Long uid = current.getId();
         if (status != null) {
-            return taskRepository.findByStatus(status);
+            return ResponseEntity.ok(taskRepository.findByRecipientIdAndStatus(uid, status));
         }
         if (dueBefore != null) {
-            return taskRepository.findByDueDateBefore(dueBefore);
+            return ResponseEntity.ok(taskRepository.findByRecipientIdAndDueDateBefore(uid, dueBefore));
         }
-        return taskRepository.findAll();
+        return ResponseEntity.ok(taskRepository.findByRecipientId(uid));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Task> get(@PathVariable Long id) {
-        return taskRepository.findById(id)
+    public ResponseEntity<Task> get(@PathVariable Long id, Authentication auth) {
+        if (auth == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        String username = auth.getName();
+        UserAccount current = users.findByUsername(username).orElse(null);
+        if (current == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        return taskRepository.findByIdAndRecipientId(id, current.getId())
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
