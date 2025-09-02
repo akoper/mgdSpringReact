@@ -25,7 +25,7 @@ export default function Layout({ children }: PropsWithChildren) {
 
                     <nav className={"nav-links " + (open ? "open" : "")}
                          onClick={() => setOpen(false)}>
-                        <NavLink to="/" end className={({ isActive }) => isActive ? 'active' : ''}>Tasks</NavLink>
+                        <NavLink to="/tasks" end className={({ isActive }) => isActive ? 'active' : ''}>Tasks</NavLink>
                         <NavLink to="/contact" className={({ isActive }) => isActive ? 'active' : ''}>Contact</NavLink>
                         <NavLink to="/login" className={({ isActive }) => isActive ? 'active' : ''}>Login</NavLink>
                         <NavLink to="/register" className={({ isActive }) => isActive ? 'active' : ''}>Register</NavLink>

@@ -4,12 +4,14 @@ import Tasks from './pages/Tasks.tsx';
 import Contact from './pages/Contact.tsx';
 import Login from './pages/Login.tsx';
 import Register from './pages/Register.tsx';
+import Home from './pages/Home.tsx';
 
 export default function App() {
     return (
         <Layout>
             <Routes>
-                <Route path="/" element={<Tasks />} />
+                <Route path="/" element={<Home />} />
+                <Route path="/tasks" element={<Tasks />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
