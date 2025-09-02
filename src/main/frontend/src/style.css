@@ -115,10 +115,7 @@ html, body, #app { height: 100%; }
   .task-form { grid-template-columns: 1fr; }
 }
 
-input[type="text"],
-input[type="text"],
-input[type="email"],
-input[type="password"],
+input,
 textarea {
   padding: .75rem;
   border-radius: 3px;

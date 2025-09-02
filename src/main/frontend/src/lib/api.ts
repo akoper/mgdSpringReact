@@ -90,3 +90,16 @@ export async function logoutServer() {
         logout();
     }
 }
+
+// Organizations
+export type Organization = { id: number; name: string; createdAt: string };
+
+export async function createOrganization(name: string): Promise<Organization> {
+    const res = await api.post(`/organizations`, { name });
+    return res.data;
+}
+
+export async function joinOrganization(id: number): Promise<{ joined: boolean; organizationId: number }> {
+    const res = await api.post(`/organizations/${id}/join`);
+    return res.data;
+}
