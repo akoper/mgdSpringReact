@@ -13,7 +13,7 @@ export default function Register() {
     setError(null);
     try {
       await register(username, password);
-      navigate("/");
+      navigate("/tasks");
     } catch (e: any) {
       setError(e?.response?.data || "Register failed");
     }

@@ -4,13 +4,17 @@ import {
     createTask,
     updateTaskStatus,
     deleteTask,
-    type Task
+    type Task,
+    listUsers,
+    type UserSummary
 } from "../lib/api";
 
 function Tasks() {
     const [tasks, setTasks] = useState<Task[]>([]);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [users, setUsers] = useState<UserSummary[]>([]);
+    const [recipientId, setRecipientId] = useState<number | "">("");
 
     async function refresh() {
         const tasks = await listTasks();
@@ -19,13 +23,17 @@ function Tasks() {
 
     useEffect(() => {
         refresh();
+        // Load users for recipient dropdown
+        listUsers().then(setUsers).catch(() => setUsers([]));
     }, []);
 
     async function onCreate(e: React.FormEvent) {
         e.preventDefault();
-        await createTask({ title: title.trim(), description: description || undefined });
+        if (!recipientId || typeof recipientId !== "number") return;
+        await createTask({ title: title.trim(), description: description || undefined, recipientId });
         setTitle("");
         setDescription("");
+        setRecipientId("");
         await refresh();
     }
 
@@ -64,6 +72,15 @@ function Tasks() {
                         value={description}
                         onChange={e => setDescription(e.target.value)}
                     />
+                    <label htmlFor="recipient">Recipient:</label>
+                    <select id="recipient" value={recipientId}
+                            onChange={e => setRecipientId(e.target.value ? Number(e.target.value) : "")}
+                            required>
+                        <option value="">Select a user...</option>
+                        {users.map(u => (
+                            <option key={u.id} value={u.id}>{u.username}</option>
+                        ))}
+                    </select>
                     <button type="submit">Create</button>
             </form>
 

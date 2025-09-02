@@ -27,6 +27,16 @@ public class Task {
     @Column(name = "due_date")
     private OffsetDateTime dueDate;
 
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "creator_id", nullable = false)
+    private UserAccount creator;
+
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "recipient_id", nullable = false)
+    private UserAccount recipient;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
 

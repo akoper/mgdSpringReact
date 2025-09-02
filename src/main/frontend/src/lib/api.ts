@@ -60,6 +60,7 @@ export type CreateTask = {
     title: string;
     description?: string;
     dueDate?: string;
+    recipientId: number;
 }
 
 export type updateTaskStatus = Partial<CreateTask> & {
@@ -73,6 +74,13 @@ export async function listTasks(params?: { status?: Task["status"]; dueBefore?: 
 
 export async function createTask(body: CreateTask) {
     const res = await api.post("/tasks", body);
+    return res.data;
+}
+
+// Users
+export type UserSummary = { id: number; username: string };
+export async function listUsers(): Promise<UserSummary[]> {
+    const res = await api.get("/users");
     return res.data;
 }
 

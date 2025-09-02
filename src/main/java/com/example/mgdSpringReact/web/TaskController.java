@@ -1,13 +1,16 @@
 package com.example.mgdSpringReact.web;
 
 import com.example.mgdSpringReact.model.Task;
+import com.example.mgdSpringReact.model.UserAccount;
 import com.example.mgdSpringReact.repository.TaskRepository;
+import com.example.mgdSpringReact.repository.UserAccountRepository;
 import com.example.mgdSpringReact.web.dto.CreateTaskRequest;
 import com.example.mgdSpringReact.web.dto.UpdateTaskRequest;
 import com.example.mgdSpringReact.web.dto.UpdateTaskStatusRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -18,9 +21,11 @@ import java.util.List;
 @RequestMapping("/api/tasks")
 public class TaskController {
     private final TaskRepository taskRepository;
+    private final UserAccountRepository users;
 
-    public TaskController(TaskRepository taskRepository) {
+    public TaskController(TaskRepository taskRepository, UserAccountRepository users) {
         this.taskRepository = taskRepository;
+        this.users = users;
     }
 
     @GetMapping
@@ -45,11 +50,29 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<Task> create(@Valid @RequestBody CreateTaskRequest request) {
+    public ResponseEntity<Task> create(@Valid @RequestBody CreateTaskRequest request, Authentication auth) {
         Task task = new Task();
         task.setTitle(request.getTitle());
         task.setDescription(request.getDescription());
         task.setDueDate(request.getDueDate());
+
+        // Set creator from authenticated user
+        String username = auth.getName();
+        UserAccount creator = users.findByUsername(username).orElse(null);
+        if (creator == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        task.setCreator(creator);
+
+        // Set recipient from request
+        if (request.getRecipientId() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        UserAccount recipient = users.findById(request.getRecipientId()).orElse(null);
+        if (recipient == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        task.setRecipient(recipient);
 
         Task saved = taskRepository.save(task);
         return ResponseEntity.created(URI.create("/api/tasks/" + saved.getId())).body(saved);

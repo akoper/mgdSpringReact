@@ -1,5 +1,6 @@
 package com.example.mgdSpringReact.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +22,7 @@ public class UserAccount {
     @Column(nullable = false, length = 100, unique = true)
     private String username;
 
+    @JsonIgnore
     @Column(nullable = false, length = 200)
     private String password; // BCrypt hash
 

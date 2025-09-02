@@ -1,4 +1,4 @@
-import { useMemo, useState, type PropsWithChildren } from 'react';
+import { useState, type PropsWithChildren } from 'react';
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import { getToken, getUserInfo, logoutServer } from "../lib/api";
 
@@ -8,12 +8,13 @@ export default function Layout({ children }: PropsWithChildren) {
     const token = getToken();
     const userInfo = getUserInfo();
 
-    const orgDisplay = useMemo(() => {
-        const orgs = userInfo?.organizations ?? [];
-        if (!orgs.length) return null;
-        if (orgs.length === 1) return orgs[0];
-        return `${orgs[0]} +${orgs.length - 1}`;
-    }, [userInfo]);
+//     // when display user's org was first created, it could be multiple orgs & memo saves value
+//     const orgDisplay = useMemo(() => {
+//         const orgs = userInfo?.organizations ?? [];
+//         if (!orgs.length) return null;
+//         if (orgs.length === 1) return orgs[0];
+//         return `${orgs[0]} +${orgs.length - 1}`;
+//     }, [userInfo]);
 
     async function onLogout() {
         await logoutServer();

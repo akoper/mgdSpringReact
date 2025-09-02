@@ -15,6 +15,9 @@ public class CreateTaskRequest {
 
     private OffsetDateTime dueDate; // optional
 
+    @jakarta.validation.constraints.NotNull
+    private Long recipientId; // required: selected from dropdown
+
     // getters & setters
     public String getTitle() {
         return title;
@@ -39,4 +42,7 @@ public class CreateTaskRequest {
     public void setDueDate(OffsetDateTime dueDate) {
         this.dueDate = dueDate;
     }
+
+    public Long getRecipientId() { return recipientId; }
+    public void setRecipientId(Long recipientId) { this.recipientId = recipientId; }
 }

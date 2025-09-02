@@ -13,7 +13,7 @@ export default function Login() {
     setError(null);
     try {
       await login(username, password);
-      navigate("/");
+      navigate("/tasks");
     } catch (e: any) {
       setError(e?.response?.data || "Login failed");
     }

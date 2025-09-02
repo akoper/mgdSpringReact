@@ -116,6 +116,7 @@ html, body, #app { height: 100%; }
 }
 
 input,
+select,
 textarea {
   padding: .75rem;
   border-radius: 3px;
