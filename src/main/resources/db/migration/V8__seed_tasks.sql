@@ -1,0 +1,41 @@
+-- Seed 35 tasks with valid creator_id and recipient_id
+-- Use subqueries to reference user IDs by username; INSERT IGNORE for idempotency
+
+-- Helper note: task has defaults for created_at/updated_at; we set title, description, status, due_date, creator_id, recipient_id
+
+INSERT IGNORE INTO task (title, description, status, due_date, creator_id, recipient_id) VALUES
+ ('Task 1','Initial task for demo','PENDING', DATE_ADD(NOW(), INTERVAL 1 DAY), (SELECT id FROM users WHERE username='alice'), (SELECT id FROM users WHERE username='bob')),
+ ('Task 2','Follow up task','IN_PROGRESS', DATE_ADD(NOW(), INTERVAL 2 DAY), (SELECT id FROM users WHERE username='bob'), (SELECT id FROM users WHERE username='carol')),
+ ('Task 3','Prepare report','PENDING', DATE_ADD(NOW(), INTERVAL 3 DAY), (SELECT id FROM users WHERE username='carol'), (SELECT id FROM users WHERE username='dave')),
+ ('Task 4','Code review','PENDING', DATE_ADD(NOW(), INTERVAL 4 DAY), (SELECT id FROM users WHERE username='dave'), (SELECT id FROM users WHERE username='eve')),
+ ('Task 5','Write tests','IN_PROGRESS', DATE_ADD(NOW(), INTERVAL 5 DAY), (SELECT id FROM users WHERE username='eve'), (SELECT id FROM users WHERE username='frank')),
+ ('Task 6','Design meeting','PENDING', DATE_ADD(NOW(), INTERVAL 6 DAY), (SELECT id FROM users WHERE username='frank'), (SELECT id FROM users WHERE username='grace')),
+ ('Task 7','Fix bugs','PENDING', DATE_ADD(NOW(), INTERVAL 7 DAY), (SELECT id FROM users WHERE username='grace'), (SELECT id FROM users WHERE username='heidi')),
+ ('Task 8','Refactor module','PENDING', DATE_ADD(NOW(), INTERVAL 8 DAY), (SELECT id FROM users WHERE username='heidi'), (SELECT id FROM users WHERE username='ivan')),
+ ('Task 9','Deploy to staging','PENDING', DATE_ADD(NOW(), INTERVAL 9 DAY), (SELECT id FROM users WHERE username='ivan'), (SELECT id FROM users WHERE username='akoper')),
+ ('Task 10','Staging verification','PENDING', DATE_ADD(NOW(), INTERVAL 10 DAY), (SELECT id FROM users WHERE username='akoper'), (SELECT id FROM users WHERE username='alice')),
+ ('Task 11','Prepare release notes','PENDING', DATE_ADD(NOW(), INTERVAL 11 DAY), (SELECT id FROM users WHERE username='alice'), (SELECT id FROM users WHERE username='carol')),
+ ('Task 12','Security audit','PENDING', DATE_ADD(NOW(), INTERVAL 12 DAY), (SELECT id FROM users WHERE username='bob'), (SELECT id FROM users WHERE username='dave')),
+ ('Task 13','Performance testing','PENDING', DATE_ADD(NOW(), INTERVAL 13 DAY), (SELECT id FROM users WHERE username='carol'), (SELECT id FROM users WHERE username='eve')),
+ ('Task 14','DB optimization','PENDING', DATE_ADD(NOW(), INTERVAL 14 DAY), (SELECT id FROM users WHERE username='dave'), (SELECT id FROM users WHERE username='frank')),
+ ('Task 15','UX review','PENDING', DATE_ADD(NOW(), INTERVAL 15 DAY), (SELECT id FROM users WHERE username='eve'), (SELECT id FROM users WHERE username='grace')),
+ ('Task 16','Finalize docs','PENDING', DATE_ADD(NOW(), INTERVAL 16 DAY), (SELECT id FROM users WHERE username='frank'), (SELECT id FROM users WHERE username='heidi')),
+ ('Task 17','Onboard new dev','PENDING', DATE_ADD(NOW(), INTERVAL 17 DAY), (SELECT id FROM users WHERE username='grace'), (SELECT id FROM users WHERE username='ivan')),
+ ('Task 18','Infra improvements','PENDING', DATE_ADD(NOW(), INTERVAL 18 DAY), (SELECT id FROM users WHERE username='heidi'), (SELECT id FROM users WHERE username='akoper')),
+ ('Task 19','Customer feedback','PENDING', DATE_ADD(NOW(), INTERVAL 19 DAY), (SELECT id FROM users WHERE username='ivan'), (SELECT id FROM users WHERE username='alice')),
+ ('Task 20','Prototype feature','IN_PROGRESS', DATE_ADD(NOW(), INTERVAL 20 DAY), (SELECT id FROM users WHERE username='akoper'), (SELECT id FROM users WHERE username='bob')),
+ ('Task 21','Analytics setup','PENDING', DATE_ADD(NOW(), INTERVAL 21 DAY), (SELECT id FROM users WHERE username='alice'), (SELECT id FROM users WHERE username='dave')),
+ ('Task 22','A/B test plan','PENDING', DATE_ADD(NOW(), INTERVAL 22 DAY), (SELECT id FROM users WHERE username='bob'), (SELECT id FROM users WHERE username='eve')),
+ ('Task 23','Feature spec','PENDING', DATE_ADD(NOW(), INTERVAL 23 DAY), (SELECT id FROM users WHERE username='carol'), (SELECT id FROM users WHERE username='frank')),
+ ('Task 24','API contract','PENDING', DATE_ADD(NOW(), INTERVAL 24 DAY), (SELECT id FROM users WHERE username='dave'), (SELECT id FROM users WHERE username='grace')),
+ ('Task 25','Logger cleanup','PENDING', DATE_ADD(NOW(), INTERVAL 25 DAY), (SELECT id FROM users WHERE username='eve'), (SELECT id FROM users WHERE username='heidi')),
+ ('Task 26','Cache tuning','PENDING', DATE_ADD(NOW(), INTERVAL 26 DAY), (SELECT id FROM users WHERE username='frank'), (SELECT id FROM users WHERE username='ivan')),
+ ('Task 27','Monitoring alerts','PENDING', DATE_ADD(NOW(), INTERVAL 27 DAY), (SELECT id FROM users WHERE username='grace'), (SELECT id FROM users WHERE username='akoper')),
+ ('Task 28','Incident drill','PENDING', DATE_ADD(NOW(), INTERVAL 28 DAY), (SELECT id FROM users WHERE username='heidi'), (SELECT id FROM users WHERE username='alice')),
+ ('Task 29','Data export','PENDING', DATE_ADD(NOW(), INTERVAL 29 DAY), (SELECT id FROM users WHERE username='ivan'), (SELECT id FROM users WHERE username='bob')),
+ ('Task 30','GDPR review','PENDING', DATE_ADD(NOW(), INTERVAL 30 DAY), (SELECT id FROM users WHERE username='akoper'), (SELECT id FROM users WHERE username='carol')),
+ ('Task 31','Migrate service','PENDING', DATE_ADD(NOW(), INTERVAL 31 DAY), (SELECT id FROM users WHERE username='alice'), (SELECT id FROM users WHERE username='frank')),
+ ('Task 32','Automate backups','PENDING', DATE_ADD(NOW(), INTERVAL 32 DAY), (SELECT id FROM users WHERE username='bob'), (SELECT id FROM users WHERE username='grace')),
+ ('Task 33','QA checklist','PENDING', DATE_ADD(NOW(), INTERVAL 33 DAY), (SELECT id FROM users WHERE username='carol'), (SELECT id FROM users WHERE username='heidi')),
+ ('Task 34','Release planning','PENDING', DATE_ADD(NOW(), INTERVAL 34 DAY), (SELECT id FROM users WHERE username='dave'), (SELECT id FROM users WHERE username='ivan')),
+ ('Task 35','Post-mortem','PENDING', DATE_ADD(NOW(), INTERVAL 35 DAY), (SELECT id FROM users WHERE username='eve'), (SELECT id FROM users WHERE username='akoper'));
