@@ -47,7 +47,7 @@ function Tasks() {
 
             <form onSubmit={onCreate} style={{ marginBottom: 16 }}>
                 <label>
-                <label for="title">Title:</label>
+                <label htmlFor="title">Title:</label>
                     <input
                         type="text"
                         id="title"
@@ -56,7 +56,7 @@ function Tasks() {
                         onChange={e => setTitle(e.target.value)}
                     />
                 </label>
-                <label for="description">Description:</label>
+                <label htmlFor="description">Description:</label>
                     <input
                         type="text"
                         id="description"

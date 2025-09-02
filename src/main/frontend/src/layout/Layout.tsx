@@ -38,7 +38,7 @@ export default function Layout({ children }: PropsWithChildren) {
                         {token ? (
                             <>
                                 <NavLink to="/tasks" end className={({ isActive }) => isActive ? 'active' : ''}>Tasks</NavLink>
-                                <NavLink onClick={onLogout} className={({ isActive }) => isActive ? 'active' : ''}>Logout</NavLink>
+                                <NavLink to="/login" onClick={onLogout} className={({ isActive }) => isActive ? 'active' : ''}>Logout</NavLink>
                             </>
                         ) : (
                             <>
