@@ -16,6 +16,8 @@ public class UpdateTaskRequest {
 
     private OffsetDateTime dueDate; // optional
 
+    private Long projectId; // optional
+
     // getters & setters
     public String getTitle() {
         return title;
@@ -47,5 +49,13 @@ public class UpdateTaskRequest {
 
     public void setDueDate(OffsetDateTime dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 }

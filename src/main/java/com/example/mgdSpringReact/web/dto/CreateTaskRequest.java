@@ -18,6 +18,8 @@ public class CreateTaskRequest {
     @jakarta.validation.constraints.NotNull
     private Long recipientId; // required: selected from dropdown
 
+    private Long projectId; // optional
+
     // getters & setters
     public String getTitle() {
         return title;
@@ -45,4 +47,7 @@ public class CreateTaskRequest {
 
     public Long getRecipientId() { return recipientId; }
     public void setRecipientId(Long recipientId) { this.recipientId = recipientId; }
+
+    public Long getProjectId() { return projectId; }
+    public void setProjectId(Long projectId) { this.projectId = projectId; }
 }

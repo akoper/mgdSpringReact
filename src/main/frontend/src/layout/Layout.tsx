@@ -53,6 +53,7 @@ export default function Layout({ children }: PropsWithChildren) {
                                     ) : null}
                                 </span>
                                 <NavLink to="/tasks" end className={({ isActive }) => isActive ? 'active' : ''}>Tasks</NavLink>
+                                <NavLink to="/projects" end className={({ isActive }) => isActive ? 'active' : ''}>Projects</NavLink>
                                 <NavLink to="/organizations" end className={({ isActive }) => isActive ? 'active' : ''}>Organizations</NavLink>
                                 <NavLink to="/login" onClick={onLogout} className={({ isActive }) => isActive ? 'active' : ''}>Logout</NavLink>
                             </>

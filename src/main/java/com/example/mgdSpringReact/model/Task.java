@@ -37,6 +37,10 @@ public class Task {
     @JoinColumn(name = "recipient_id", nullable = false)
     private UserAccount recipient;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
 
